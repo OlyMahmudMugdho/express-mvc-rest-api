@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const verifyJWT = require('../test-1/middleware/verifyJWT');
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'views')));
@@ -22,12 +23,15 @@ const corsConfig = {
 
 
 app.use(cors(corsConfig));
+app.use('/register',require('./routes/register'));
+app.use('/auth',require('./routes/auth'));
+
+
+app.use(verifyJWT);
 app.use('/posts', require('./api/posts'));
 app.use('/posts', require('./api/posts'));
 app.use('/posts/:id', require('./api/posts'));
 
-app.use('/register',require('./routes/register'));
-app.use('/auth',require('./routes/auth'));
 
 const PORT = process.env.PORT | 5000;
 
