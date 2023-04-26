@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const verifyJWT = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -11,8 +11,8 @@ const verifyJWT = (req, res, next) => {
     jwt.verify(
         token,
         process.env.ACCESS_TOKEN_SECRET,
-        (err, decoded) => {
-            if (err) {
+        (error, decoded) => {
+            if (error) {
                 return res.sendStatus(403);
             }
             else {
@@ -20,7 +20,7 @@ const verifyJWT = (req, res, next) => {
                 next();
             }
         }
-    );
+    )
 }
 
 module.exports = verifyJWT;

@@ -1,14 +1,16 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const verifyJWT = require('../test-1/middleware/verifyJWT');
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser());
 app.use(express.json());
 
-const corsOptions = ['*','https://example.com'];
+const corsOptions = ['*', 'https://example.com'];
 
 const corsConfig = {
     origin: (origin, callback) => {
@@ -23,9 +25,9 @@ const corsConfig = {
 
 
 app.use(cors(corsConfig));
-app.use('/register',require('./routes/register'));
-app.use('/auth',require('./routes/auth'));
-
+app.use('/register', require('./routes/register'));
+app.use('/auth', require('./routes/auth'));
+app.use('/refresh',require('./routes/refresh'));
 
 app.use(verifyJWT);
 app.use('/posts', require('./api/posts'));
