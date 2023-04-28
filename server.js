@@ -13,6 +13,7 @@ app.use(express.json());
 const corsOptions = ['*', 'https://example.com'];
 
 const corsConfig = {
+    credentials : true,
     origin: (origin, callback) => {
         if (corsOptions[0] === '*' || corsOptions.indexOf(origin) !== -1) {
             callback(null, true);
@@ -28,6 +29,7 @@ app.use(cors(corsConfig));
 app.use('/register', require('./routes/register'));
 app.use('/auth', require('./routes/auth'));
 app.use('/refresh',require('./routes/refresh'));
+app.use('/logout',require('./routes/logout'));
 
 app.use(verifyJWT);
 app.use('/posts', require('./api/posts'));
