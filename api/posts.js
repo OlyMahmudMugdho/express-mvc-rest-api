@@ -5,12 +5,13 @@ const CreatePostController = require("../controllers/CreatePostController");
 const SinglePostController = require("../controllers/SinglePostController");
 const UpdatePostController = require("../controllers/UpdatePostController");
 const DeletePostController = require("../controllers/DeletePostController");
-
+const verifyRoles = require('../middleware/verifyRoles');
+const rolesList = require('../configs/roles');
 
 
 router.route('/')
     .get(AllPostsController.getAllPost)
-    .post(CreatePostController.createPost)
+    .post(verifyRoles(rolesList.Admin,rolesList.Editor),CreatePostController.createPost)
 
 router.route('/:id')
     .get(SinglePostController.getSinglePost)

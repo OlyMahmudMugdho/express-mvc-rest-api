@@ -3,7 +3,12 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const bcrypt = require("bcrypt");
 
-const usersDB = require('../models/Users');
+const usersDB = {
+    users: require("../models/users.json"),
+    setUsers: function (data) {
+        this.users = data;
+    }
+}
 
 require("dotenv").config();
 
@@ -17,9 +22,11 @@ const handleAuth = async (req, res) => {
         );
     }
     else {
-        const foundUser = await usersDB.findOne({ username: username }).exec();
+        const foundUser = usersDB.users.find(
+            person => person.username === username
+        )
 
-        const roles = foundUser.roles;
+        const roles = Object.values(foundUser.roles);
         console.log(roles, ' from Auth Controller')
         if (!foundUser) {
             return res.status(401).json(
@@ -54,11 +61,21 @@ const handleAuth = async (req, res) => {
                         expiresIn: '1d'
                     }
                 );
-                
-                foundUser.refreshToken = refreshToken;
-                const result = await foundUser.save();
+                const currentUser = {
+                    ...foundUser,
+                    refreshToken
+                };
+                const otherUsers = usersDB.users.filter(
+                    person => person.username !== username
+                );
 
-                console.log(result);
+                usersDB.setUsers([...otherUsers, currentUser]);
+
+                fs.writeFile(path.join(__dirname, '..', 'models', 'users.json'), JSON.stringify(usersDB.users),
+                    (err) => {
+                        console.log(err);
+                    }
+                )
 
                 return res.cookie(
                     'jwt',

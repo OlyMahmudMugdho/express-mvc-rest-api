@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
+
 
 const verifyJWT = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -16,7 +16,8 @@ const verifyJWT = (req, res, next) => {
                 return res.sendStatus(403);
             }
             else {
-                req.username = decoded.username;
+                req.username = decoded.UserInfo.username;
+                req.roles = decoded.UserInfo.roles
                 next();
             }
         }

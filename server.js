@@ -3,6 +3,9 @@ const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const verifyJWT = require('../test-1/middleware/verifyJWT');
+require("dotenv").config();
+const mongoose = require('mongoose');
+const connectDB = require('./middleware/dbConnection');
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'views')));
@@ -10,10 +13,12 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser());
 app.use(express.json());
 
+connectDB();
+
 const corsOptions = ['*', 'https://example.com'];
 
 const corsConfig = {
-    credentials : true,
+    credentials: true,
     origin: (origin, callback) => {
         if (corsOptions[0] === '*' || corsOptions.indexOf(origin) !== -1) {
             callback(null, true);
@@ -28,8 +33,8 @@ const corsConfig = {
 app.use(cors(corsConfig));
 app.use('/register', require('./routes/register'));
 app.use('/auth', require('./routes/auth'));
-app.use('/refresh',require('./routes/refresh'));
-app.use('/logout',require('./routes/logout'));
+app.use('/refresh', require('./routes/refresh'));
+app.use('/logout', require('./routes/logout'));
 
 app.use(verifyJWT);
 app.use('/posts', require('./api/posts'));
@@ -61,8 +66,11 @@ app.get('/api', (req, res) => {
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'index.html'))
 })
-    .listen(PORT, (req, res) => {
-        console.log(req)
-        console.log(`Server running at http://localhost:${PORT}`)
+
+mongoose.connection.once('open', () => {
+    app.listen(PORT, (req, res) => {
+        console.log("connected to mongodb");
+        console.log(`Server running at http://localhost:${PORT}`);
     })
+})
 
