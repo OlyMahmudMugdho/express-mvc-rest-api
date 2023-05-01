@@ -8,7 +8,8 @@ const verifyRoles = (...allowedRoles) => {
         const roles = [...allowedRoles];
         console.log(req.roles);
         console.log(roles);
-        const matched = req.roles.map(
+        const reqRoles = Object.values(req.roles);
+        const matched = reqRoles.map(
             role => roles.includes(role)
         ).find(val => val === true );
         if (!matched) {

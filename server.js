@@ -3,10 +3,10 @@ const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const verifyJWT = require('../test-1/middleware/verifyJWT');
-require("dotenv").config();
 const mongoose = require('mongoose');
 const connectDB = require('./middleware/dbConnection');
 const app = express();
+require("dotenv").config();
 
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.urlencoded({ extended: false }))

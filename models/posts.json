@@ -1,1 +1,12 @@
-[{"id":1,"title":"A random title","body":"some text that doesn't have any meaning"},{"id":2,"title":"Another random title","body":"random  etrhukjgr kuwht kjwhtejewk some text that doesn't have any meaning"},{"id":"ea5fb765-3436-4bf8-8a91-0d9f72b0ef6b","title":"randome 64531","body":"girehgtug ehrg"}]
+[
+  {
+    "id": 1,
+    "title": "A random title",
+    "body": "some text that doesn't have any meaning"
+  },
+  {
+    "id": 2,
+    "title": "Another random title",
+    "body": "random post in file system "
+  }
+]

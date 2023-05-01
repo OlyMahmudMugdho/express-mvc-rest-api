@@ -12,10 +12,13 @@ const usersSchema = new Schema(
             required: true
         },
         roles: {
-            User: {
+            /* User: {
                 type: Number,
                 default: 3
-            }
+            } */
+
+            type : Object,
+            required : true
         },
         refreshToken: String
     }

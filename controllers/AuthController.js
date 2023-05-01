@@ -1,11 +1,8 @@
-const fs = require("fs");
 const jwt = require("jsonwebtoken");
-const path = require("path");
+
 const bcrypt = require("bcrypt");
 
 const usersDB = require('../models/Users');
-
-require("dotenv").config();
 
 const handleAuth = async (req, res) => {
     const { username, password } = await req.body;
@@ -19,8 +16,8 @@ const handleAuth = async (req, res) => {
     else {
         const foundUser = await usersDB.findOne({ username: username }).exec();
 
-        const roles = foundUser.roles;
-        console.log(roles, ' from Auth Controller')
+        
+
         if (!foundUser) {
             return res.status(401).json(
                 {
@@ -29,9 +26,10 @@ const handleAuth = async (req, res) => {
             );
         }
         else {
+            
             const match = await bcrypt.compare(password, foundUser.password);
             if (match) {
-                console.log(roles, ' from auth controller again')
+                const roles = foundUser.roles;
                 const accessToken = jwt.sign(
                     {
                         "UserInfo": {
@@ -54,7 +52,7 @@ const handleAuth = async (req, res) => {
                         expiresIn: '1d'
                     }
                 );
-                
+
                 foundUser.refreshToken = refreshToken;
                 const result = await foundUser.save();
 

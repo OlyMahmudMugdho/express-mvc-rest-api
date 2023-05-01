@@ -1,21 +1,37 @@
-const posts = require('../models/posts.json');
-const fs = require('fs');
+const Posts = require('../models/Posts');
 
 let newPosts;
-const deletePost = (req, res) => {
-    const entry = parseInt(req.params.id) - 1;
-    if (entry < posts.length) {
-        posts.splice(entry, 1);
-        fs.writeFile('././models/posts.json', JSON.stringify(posts), (err) => {
-            console.log(err);
-        })
-        return res.json(posts);
+const deletePost = async (req, res) => {
+    const id = await req.params.id;
+    if(!id){
+        return res.status(403).json(
+            {
+                "error" : "ID is required"
+            }
+        )
     }
-    else {
-        return res.status(400).json({
-            message: "wrong entry"
-        })
+
+    const foundPost = await Posts.findOne({ _id : id });
+
+    if(!foundPost){
+        return res.status(404).json(
+            {
+                "error" : "post not found"
+            }
+        )
     }
+    else{
+        const result = await Posts.deleteOne({ _id : id });
+        
+        console.log(result);
+        
+        return res.status(201).json(
+            {
+                foundPost
+            }
+        )
+    }
+
 }
 
 module.exports = {

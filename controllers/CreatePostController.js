@@ -1,11 +1,9 @@
-const posts = require("../models/posts.json");
-const fs = require("fs");
-const uuid = require("uuid");
+const posts = require("../models/Posts");
 
 
-let newPost, dbPost;
-const createPost = (req, res) => {
-    if (!req.body.title || !req.body.body) {
+const createPost = async (req, res) => {
+    const { title, body } = await req.body;
+    if (!title || !body) {
         return res.status(400).json(
             {
                 "message": "Emplty Field"
@@ -13,21 +11,16 @@ const createPost = (req, res) => {
         )
     }
 
-    newPost = {
-        id: uuid.v4(),
-        title: req.body.title,
-        body: req.body.body
-    }
-    dbPost =
-        [
-            ...posts,
-            newPost
-        ]
+    const newPost = await posts.create(
+        {
+            title: title,
+            body: body
+        }
+    );
 
-    fs.writeFile('././models/posts.json', JSON.stringify(dbPost), (err) => {
-        console.log(err)
-    });
-    res.json({
+    console.log(await newPost);
+
+    return res.status(201).json({
         newPost
     })
 

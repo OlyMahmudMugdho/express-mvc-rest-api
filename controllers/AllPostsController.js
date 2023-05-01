@@ -1,7 +1,12 @@
-const allPosts = require("../models/posts.json");
+const Posts = require('../models/Posts');
 
-const getAllPost = (req, res) => {
-    res.json(allPosts);
+const getAllPost = async (req, res) => {
+    const allposts = await Posts.find();
+    return res.status(201).json(
+        {
+            allposts
+        }
+    );
 }
 
 module.exports = { getAllPost }

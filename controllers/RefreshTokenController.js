@@ -3,13 +3,13 @@ const usersDB = require('../models/Users');
 
 require('dotenv').config();
 
-const refreshTokenHandler = (req, res) => {
+const refreshTokenHandler = async (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) {
         return res.sendStatus(401);
     }
     const refreshToken = cookies.jwt;
-    const foundUser = usersDB.findOne({refreshToken : refreshToken}).exec();
+    const foundUser = await usersDB.findOne({refreshToken : refreshToken}).exec();
     const roles = foundUser.roles;
     console.log(roles,' from refresh token controller')
     if (!foundUser) {

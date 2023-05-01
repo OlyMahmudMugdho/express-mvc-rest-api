@@ -1,15 +1,22 @@
-const posts = require("../models/posts.json");
+const Posts = require('../models/Posts');
 
 
-const getSinglePost = (req, res) => {
-    const entry = parseInt(req.params.id) - 1;
-    if (entry < posts.length) {
-        res.json(posts[entry]);
+const getSinglePost = async (req, res) => {
+    const id = await req.params.id;
+    const post = await Posts.findOne({ _id: id });
+    if (!post) {
+        return res.status(404).json(
+            {
+                "error": "not found"
+            }
+        )
     }
     else {
-        return res.status(400).json({
-            "message": "Wrong Entry"
-        })
+        return res.status(201).json(
+            {
+                post
+            }
+        )
     }
 }
 

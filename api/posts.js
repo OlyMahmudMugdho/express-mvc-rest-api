@@ -11,10 +11,10 @@ const rolesList = require('../configs/roles');
 
 router.route('/')
     .get(AllPostsController.getAllPost)
-    .post(verifyRoles(rolesList.Admin,rolesList.Editor),CreatePostController.createPost)
+    .post(verifyRoles(rolesList.Admin),CreatePostController.createPost)
 
 router.route('/:id')
     .get(SinglePostController.getSinglePost)
-    .put(UpdatePostController.updatePost)
+    .put(verifyRoles(rolesList.Admin),UpdatePostController.updatePost)
     .delete(DeletePostController.deletePost)
 module.exports = router;

@@ -1,35 +1,42 @@
-const posts = require("../models/posts.json");
-const fs = require("fs");
+const Posts = require('../models/Posts');
 
 let newPost;
-const updatePost = (req, res) => {
-    const entry = parseInt(req.params.id) - 1;
-    if (entry < posts.length) {
-        if (!req.body.title || !req.body.body) {
-            return res.status(400).json(
+const updatePost = async (req, res) => {
+    const id = await req.params.id;
+    if (!id) {
+        return res.status(403).json(
+            {
+                "error": "ID is required"
+            }
+        )
+    }
+    else {
+        const foundPost = await Posts.findOne({ _id: id });
+        if (!foundPost) {
+            return res.status(404).json(
                 {
-                    message: "Fields are empty"
+                    "error": "post not found"
                 }
             )
         }
         else {
-            posts[entry].title = req.body.title;
-            posts[entry].body = req.body.body;
-            newPost = {
-                id: posts[entry].id,
-                title: req.body.title,
-                body: req.body.body
+            if (req.body.title) {
+                foundPost.title = await req.body.title;
             }
-            fs.writeFile("././models/posts.json", JSON.stringify(posts), (err) => {
-                console.log(err)
-            })
-            return res.json(newPost);
+
+            if (req.body.body) {
+                foundPost.body = await req.body.body;
+            }
+
+            const result = await foundPost.save();
+            console.log(result);
+
+            return res.status(201).json(
+                {
+                    foundPost
+                }
+            )
         }
-    }
-    else {
-        return res.status(400).json({
-            message: "wrong entry"
-        })
     }
 }
 
